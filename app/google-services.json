@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "489495539516",
+    "firebase_url": "https://lifechord-launch.firebaseio.com",
+    "project_id": "lifechord-launch",
+    "storage_bucket": "lifechord-launch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489495539516:android:9d9c39dec61e1f28",
+        "android_client_info": {
+          "package_name": "com.aponjon.lifechordlaunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489495539516-rb842uqj8r5oci9soqmck5j5ermu8jhc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLo4085PZjAviDu6dkTOrc8CbYI2vTU-o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "489495539516-rb842uqj8r5oci9soqmck5j5ermu8jhc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
