@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,14 +21,12 @@ import com.com.utils.LoginState;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pojo.MyResult;
 import com.pojo.Post;
 
 import java.text.SimpleDateFormat;
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -39,23 +43,41 @@ public class DashboardActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private LoginState loginState;
 
+    Animation atg, atgtwo, atgthree;
+
+    @BindView(R.id.food_image)
+    ImageView foodImage;
+
+    @BindView(R.id.pagesubtitle)
+    TextView pageSubtitle;
+
+    @BindView(R.id.button_launch_order)
+    Button launchOrder;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         loginState = new LoginState(getApplicationContext());
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postNewData();
-            }
-        });
+        atg = AnimationUtils.loadAnimation(this, R.anim.atg);
+        atgtwo = AnimationUtils.loadAnimation(this, R.anim.atgtwo);
+        atgthree = AnimationUtils.loadAnimation(this, R.anim.atgthree);
+
+        // pass an animation
+        foodImage.startAnimation(atg);
+        pageSubtitle.startAnimation(atgtwo);
+        launchOrder.startAnimation(atgthree);
+
+        // pass an animation
+        foodImage.startAnimation(atg);
+        pageSubtitle.startAnimation(atgtwo);
+        launchOrder.startAnimation(atgthree);
 
         databaseQuary();
     }
