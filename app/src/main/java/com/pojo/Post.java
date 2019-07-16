@@ -1,33 +1,78 @@
 package com.pojo;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
-// [START post_class]
 @IgnoreExtraProperties
 public class Post {
 
-    public String uid;
-    public String body;
+    public String name;
+    public String designation;
+    public String launchDate;
+    public String isAlreadySelect;
+    public String userID;
 
-    public Post(String uid, String body) {
-        this.uid = uid;
-        this.body = body;
+    public Post() {
     }
 
-    public String getUid() {
-        return uid;
+    public Post(String name, String designation, String launchDate, String isAlreadySelect, String userID) {
+        this.name = name;
+        this.designation = designation;
+        this.launchDate = launchDate;
+        this.isAlreadySelect = isAlreadySelect;
+        this.userID = userID;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public String getUserID() {
+        return userID;
     }
 
-    public String getBody() {
-        return body;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public String getName() {
+        return name;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public Post(String launchDate, String isAlreadySelect) {
+        this.launchDate = launchDate;
+        this.isAlreadySelect = isAlreadySelect;
+    }
+
+    public String getLaunchDate() {
+        return launchDate;
+    }
+
+    public void setLaunchDate(String launchDate) {
+        this.launchDate = launchDate;
+    }
+
+    public String getIsAlreadySelect() {
+        return isAlreadySelect;
+    }
+
+    public void setIsAlreadySelect(String isAlreadySelect) {
+        this.isAlreadySelect = isAlreadySelect;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "\nname: " + name + "\nemail: " + designation + "\ndate: " + launchDate + "\nisAlreadySet: " + isAlreadySelect;
     }
 }
 

@@ -15,15 +15,22 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.aponjon.lifechordlaunch.R;
 import com.com.utils.Constant;
+import com.com.utils.LoginState;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.pojo.LoginState;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.pojo.MyUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,7 +47,8 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     FirebaseAuth auth;
-    FirebaseAuth.AuthStateListener mAuthListener;
+
+    public DatabaseReference databaseReference;
 
     public LoginState loginState;
 
@@ -53,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         auth = FirebaseAuth.getInstance();
         loginState = new LoginState(getApplicationContext());
+
+        databaseReference = FirebaseDatabase.getInstance().getReference(Constant.USER);
 
         if (loginState.getBooleanDataFromSharedPreferance(Constant.IS_LOGIN)) {
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -85,10 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                    startActivity(intent);
-                                    loginState.saveDataIntoSharePreferance(Constant.IS_LOGIN, true);
-                                    finish();
+                                    getUserData();
                                 }
                             }
                         });
@@ -100,6 +107,34 @@ public class LoginActivity extends AppCompatActivity {
     public void openRegistrationActivity() {
         Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
         startActivity(intent);
+    }
+
+    private void getUserData() {
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        databaseReference.child(userID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        MyUser myUser = dataSnapshot.getValue(MyUser.class);
+
+                        Timber.d("name" + myUser.getName());
+                        Timber.d("designation: " + myUser.getName());
+                        loginState.saveDataIntoSharePreferance(Constant.IS_LOGIN, true);
+                        loginState.saveDataIntoSharePreferance(Constant.NAME, "" + myUser.getName());
+                        loginState.saveDataIntoSharePreferance(Constant.DESIGNATION, "" + myUser.getDesignation());
+                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
 }

@@ -1,12 +1,9 @@
-package com.pojo;
+package com.com.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.com.utils.Constant;
-
 public class LoginState {
-
     public Context context;
     public SharedPreferences sharedPreferences;
 
@@ -26,6 +23,7 @@ public class LoginState {
         editor.putBoolean(key, value);
         editor.apply();
     }
+
     public String getDataFromSharedPreferance(String key) {
         String value = sharedPreferences.getString(key, "");
         return value;

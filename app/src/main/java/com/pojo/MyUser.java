@@ -1,5 +1,7 @@
 package com.pojo;
 
+import androidx.annotation.NonNull;
+
 public class MyUser {
     public String name, email, designation;
 
@@ -35,4 +37,5 @@ public class MyUser {
     public void setDesignation(String designation) {
         this.designation = designation;
     }
+
 }

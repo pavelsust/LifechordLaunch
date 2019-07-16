@@ -14,13 +14,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.aponjon.lifechordlaunch.R;
 import com.com.utils.Constant;
+import com.com.utils.LoginState;
 import com.com.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.pojo.LoginState;
 import com.pojo.MyUser;
 
 import butterknife.BindView;
