@@ -1,11 +1,13 @@
 package com.activity;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.aponjon.lifechordlaunch.R;
 import com.com.utils.Constant;
 import com.com.utils.LoginState;
+import com.com.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -44,13 +47,11 @@ public class LoginActivity extends AppCompatActivity {
     AppCompatButton btnResetPassword;
     @BindView(R.id.btn_signup)
     Button btnSignup;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
     FirebaseAuth auth;
 
     public DatabaseReference databaseReference;
-
     public LoginState loginState;
+    public ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,9 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         auth = FirebaseAuth.getInstance();
         loginState = new LoginState(getApplicationContext());
+        progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog.setMessage("Loading ...");
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference(Constant.USER);
 
@@ -73,32 +77,33 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
 
-                String email = inputEmail.getText().toString();
-                final String password = inputPassword.getText().toString();
+                if (Utils.isValidText(inputEmail) && Utils.isValidText(inputPassword)) {
+                    String email = inputEmail.getText().toString();
+                    final String password = inputPassword.getText().toString();
 
-                //authenticate user
-                auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                progressBar.setVisibility(View.GONE);
-                                if (!task.isSuccessful()) {
-                                    // there was an error
-                                    if (password.length() < 6) {
-                                        inputPassword.setError(getString(R.string.minimum_password));
+                    progressDialog.show();
+
+                    //authenticate user
+                    auth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                    if (!task.isSuccessful()) {
+                                        // there was an error
+                                        if (password.length() < 6) {
+                                            inputPassword.setError(getString(R.string.minimum_password));
+                                        } else {
+                                            Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                        }
                                     } else {
-                                        Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                        progressDialog.dismiss();
+                                        getUserData();
                                     }
-                                } else {
-                                    getUserData();
                                 }
-                            }
-                        });
+                            });
+                }
             }
         });
     }
@@ -110,8 +115,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getUserData() {
+        progressDialog.show();
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         databaseReference.child(userID)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -124,6 +129,8 @@ public class LoginActivity extends AppCompatActivity {
                         loginState.saveDataIntoSharePreferance(Constant.IS_LOGIN, true);
                         loginState.saveDataIntoSharePreferance(Constant.NAME, "" + myUser.getName());
                         loginState.saveDataIntoSharePreferance(Constant.DESIGNATION, "" + myUser.getDesignation());
+                        progressDialog.dismiss();
+
                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                         startActivity(intent);
                         finish();
@@ -135,6 +142,18 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    public boolean isNetworkAvailable(Context ctxContext) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) ctxContext
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+                .isConnected()
+                || connectivityManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).isConnected()) {
+            return true;
+        }
+        return false;
     }
 
 }
