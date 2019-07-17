@@ -33,5 +33,9 @@ public class LoginState {
         boolean value = sharedPreferences.getBoolean(key, false);
         return value;
     }
+    public void clearSharedPreferance() {
+        this.context.getSharedPreferences(Constant.LOGIN_STATE, Context.MODE_PRIVATE).edit().clear().commit();
+    }
+
 
 }

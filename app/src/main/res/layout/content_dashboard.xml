@@ -8,7 +8,6 @@
     android:background="#F9FBFF"
     tools:context=".MainActivity">
 
-
     <View
         android:layout_width="match_parent"
         android:layout_height="230dp"
@@ -23,10 +22,10 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="71dp"
-        android:layout_height="71dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginLeft="@dimen/_16sdp"
         android:layout_marginTop="26dp"
         android:src="@drawable/userpic"
         app:layout_constraintStart_toStartOf="parent"
@@ -97,6 +96,7 @@
 
 
             <LinearLayout
+                android:id="@+id/layout_ell_employee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -147,6 +147,31 @@
             </LinearLayout>
 
 
+            <LinearLayout
+                android:id="@+id/layout_log_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/ic_logout" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/mm"
+                    android:text="Log out"
+                    android:textColor="#172646"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
     </LinearLayout>
@@ -172,7 +197,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="@font/mm"
-        android:text="Order not placed yet"
+
         android:textColor="#172646"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"

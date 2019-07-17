@@ -41,11 +41,15 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     implementation 'com.google.firebase:firebase-auth:18.0.0'
     implementation 'com.google.firebase:firebase-database:18.0.0'
+    // FirebaseUI for Firebase Realtime Database
+    implementation 'com.firebaseui:firebase-ui-database:5.0.0'
 
     // sdp library
     implementation 'com.intuit.sdp:sdp-android:1.0.3'
     implementation 'com.github.GrenderG:Toasty:1.1.2'  // butter knife
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
 }
 apply plugin: 'com.google.gms.google-services'

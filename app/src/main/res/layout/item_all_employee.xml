@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/_16sdp"
+    android:paddingTop="@dimen/_10sdp"
+    android:paddingRight="@dimen/_16sdp"
+    android:paddingBottom="@dimen/_10sdp">
+
+    <ImageView
+        android:id="@+id/letter_image"
+        android:layout_width="@dimen/_38sdp"
+        android:layout_height="@dimen/_38sdp" />
+
+    <TextView
+        android:id="@+id/contact_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/letter_image"
+        android:fontFamily="@font/ml"
+        android:paddingLeft="@dimen/_13sdp"
+        android:text="title"
+        android:textSize="@dimen/_15sdp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/contact_number_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contact_name"
+        android:layout_toRightOf="@id/letter_image"
+        android:fontFamily="@font/ml"
+        android:paddingLeft="@dimen/_13sdp"
+        android:text="tilte2" />
+
+
+</RelativeLayout>

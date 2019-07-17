@@ -1,5 +1,6 @@
 package com.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,12 +9,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.aponjon.lifechordlaunch.R;
 import com.com.utils.Constant;
@@ -30,12 +31,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.pojo.Post;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -54,6 +54,20 @@ public class DashboardActivity extends AppCompatActivity {
     @BindView(R.id.button_launch_order)
     Button launchOrder;
 
+    @BindView(R.id.food_order_title)
+    TextView foodOrderTitle;
+    public boolean isLaunchOrder = false;
+
+    public ProgressDialog progressDialog;
+
+    @BindView(R.id.layout_log_out)
+    LinearLayout logOut;
+
+    @BindView(R.id.text_user_name)
+    TextView userName;
+
+    @BindView(R.id.text_user_designation)
+    TextView userDesignation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,50 +75,80 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
 
-
         databaseReference = FirebaseDatabase.getInstance().getReference();
         loginState = new LoginState(getApplicationContext());
+        progressDialog = new ProgressDialog(DashboardActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
 
         atg = AnimationUtils.loadAnimation(this, R.anim.atg);
         atgtwo = AnimationUtils.loadAnimation(this, R.anim.atgtwo);
         atgthree = AnimationUtils.loadAnimation(this, R.anim.atgthree);
 
-        // pass an animation
-        foodImage.startAnimation(atg);
-        pageSubtitle.startAnimation(atgtwo);
-        launchOrder.startAnimation(atgthree);
+        if (loginState.getDataFromSharedPreferance(Constant.NAME) != null && !loginState.getDataFromSharedPreferance(Constant.NAME).isEmpty()) {
+            userName.setText("" + loginState.getDataFromSharedPreferance(Constant.NAME));
+        }
 
-        // pass an animation
-        foodImage.startAnimation(atg);
-        pageSubtitle.startAnimation(atgtwo);
-        launchOrder.startAnimation(atgthree);
+        if (loginState.getDataFromSharedPreferance(Constant.DESIGNATION) != null && !loginState.getDataFromSharedPreferance(Constant.DESIGNATION).isEmpty()) {
+            userDesignation.setText("" + loginState.getDataFromSharedPreferance(Constant.DESIGNATION));
+        }
 
         databaseQuary();
     }
 
-    private void postNewData() {
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String key = databaseReference.push().getKey();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDateandTime = sdf.format(new Date());
-        Post post = new Post("" + loginState.getDataFromSharedPreferance(Constant.NAME), "" + loginState.getDataFromSharedPreferance(Constant.DESIGNATION), "" + currentDateandTime, "0" , userID);
+    @OnClick(R.id.layout_log_out)
+    public void logout() {
+        loginState.clearSharedPreferance();
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+        finish();
+    }
+
+
+    @OnClick(R.id.button_launch_order)
+    public void orderButtonClick() {
+        if (!isLaunchOrder) {
+            postNewData();
+        } else {
+            updateData("0");
+        }
+
+    }
+
+
+    @OnClick(R.id.layout_ell_employee)
+    public void allEmployee() {
+        startActivity(new Intent(DashboardActivity.this, AllEmployeeActivity.class));
+    }
+
+    public void postNewData() {
+        progressDialog.show();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //String key = databaseReference.push().getKey();
+        Post post = new Post("" + loginState.getDataFromSharedPreferance(Constant.NAME), "" + loginState.getDataFromSharedPreferance(Constant.DESIGNATION), "" + getCurrentDate(), "1", userID);
         databaseReference
                 .child(Constant.DATA)
-                .child(key)
+                .child(userID)
                 .setValue(post)
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Timber.d("" + e.toString());
+                        progressDialog.dismiss();
                     }
                 })
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        progressDialog.dismiss();
                         if (task.isSuccessful()) {
+                            isLaunchOrder = true;
                             Toast.makeText(DashboardActivity.this, "Success", Toast.LENGTH_LONG).show();
+                            updateUI();
                         } else {
+                            isLaunchOrder = false;
+                            updateUI();
                             Timber.d("" + task.getException().toString());
                         }
                     }
@@ -142,30 +186,70 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void databaseQuary() {
-
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+        progressDialog.show();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
         databaseReference
-                .child(Constant.DATA).orderByChild("userID").equalTo(""+userID)
+                .child(Constant.DATA)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        List<Post> postArrayList = new ArrayList<>();
 
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             Post post = dataSnapshot1.getValue(Post.class);
-                            postArrayList.add(post);
-                        }
 
+                            if (post.getUserID().equals("" + userID)) {
+                                if (post.getLaunchDate().equals("" + getCurrentDate())) {
+                                    if (post.getIsAlreadySelect().equals("1")) {
+                                        isLaunchOrder = true;
+                                    } else {
+                                        isLaunchOrder = false;
+                                    }
+                                } else {
+                                    isLaunchOrder = false;
+                                }
+                            }
+                        }
+                        updateUI();
                         Timber.d("firebase data: "+dataSnapshot.toString());
-                        Timber.d("list data"+postArrayList.toString());
+                        progressDialog.dismiss();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        progressDialog.dismiss();
                     }
                 });
     }
 
+
+    private void updateData(String order) {
+        progressDialog.show();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference.child(Constant.DATA).child(userID).child("isAlreadySelect").setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    isLaunchOrder = false;
+                    updateUI();
+                }
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+        return currentDate;
+    }
+
+    public void updateUI() {
+        if (isLaunchOrder) {
+            foodOrderTitle.setText("Your order complete");
+            launchOrder.setText("Cancel Order");
+        } else {
+            foodOrderTitle.setText("Order is not placed yet");
+            launchOrder.setText("Launch Order");
+        }
+    }
 }
