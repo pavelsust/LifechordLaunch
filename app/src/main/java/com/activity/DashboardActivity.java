@@ -1,6 +1,7 @@
 package com.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.aponjon.lifechordlaunch.R;
@@ -30,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pojo.Post;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -97,6 +100,12 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
 
+    @OnClick(R.id.layout_order)
+    public void openOrder() {
+        startActivity(new Intent(DashboardActivity.this, MyOrderActivity.class));
+    }
+
+
     @OnClick(R.id.layout_log_out)
     public void logout() {
         loginState.clearSharedPreferance();
@@ -108,14 +117,24 @@ public class DashboardActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_launch_order)
     public void orderButtonClick() {
-        if (!isLaunchOrder) {
-            postNewData();
-        } else {
-            updateData("0");
+
+        try {
+            if (compareDate()) {
+                if (!isLaunchOrder) {
+                    postNewData();
+                    createOrderList("1");
+                } else {
+                    updateData("0");
+                    createOrderList("0");
+                }
+
+            } else {
+                showDialog();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-
     }
-
 
     @OnClick(R.id.layout_ell_employee)
     public void allEmployee() {
@@ -156,6 +175,33 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
+
+    private void createOrderList(String order) {
+        progressDialog.show();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String key = databaseReference.push().getKey();
+        Post post = new Post("" + getCurrentDateAndTime(), order);
+
+        databaseReference
+                .child(Constant.ORDER)
+                .child(userID)
+                .child(key)
+                .setValue(post)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.d("" + e.toString());
+
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -243,6 +289,12 @@ public class DashboardActivity extends AppCompatActivity {
         return currentDate;
     }
 
+    private String getCurrentDateAndTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+        String currentDate = sdf.format(new Date());
+        return currentDate;
+    }
+
     public void updateUI() {
         if (isLaunchOrder) {
             foodOrderTitle.setText("Your order complete");
@@ -251,5 +303,39 @@ public class DashboardActivity extends AppCompatActivity {
             foodOrderTitle.setText("Order is not placed yet");
             launchOrder.setText("Launch Order");
         }
+    }
+
+    public boolean compareDate() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+
+        Date currentDateTime = sdf.parse(getCurrentDateAndTime());
+        Date setDateTime = sdf.parse(setDateTime());
+
+        if (currentDateTime.before(setDateTime)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private String setDateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+        return currentDate + " 04:35 PM";
+    }
+
+    public void showDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Notice");
+        alertDialogBuilder.setMessage("Your can't change order after 10:45 AM");
+        alertDialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
