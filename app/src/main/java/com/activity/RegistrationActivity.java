@@ -1,6 +1,5 @@
 package com.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -50,7 +49,6 @@ public class RegistrationActivity extends AppCompatActivity {
     @BindView(R.id.registration_designation)
     EditText inputDesignation;
     private FirebaseAuth mAuth;
-
     public LoginState loginState;
 
     @Override
@@ -87,8 +85,6 @@ public class RegistrationActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         progressBar.setVisibility(View.GONE);
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(RegistrationActivity.this, "Success", Toast.LENGTH_LONG).show();
-                                            openDashboard();
                                         } else {
                                             //display a failure message
                                         }
@@ -104,12 +100,12 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
 
-    private void openDashboard() {
-        loginState.saveDataIntoSharePreferance(Constant.IS_LOGIN, true);
-        Intent intent = new Intent(RegistrationActivity.this, DashboardActivity.class);
-        startActivity(intent);
-        finish();
-    }
+//    private void openDashboard() {
+//        loginState.saveDataIntoSharePreferance(Constant.IS_LOGIN, true);
+//        Intent intent = new Intent(RegistrationActivity.this, DashboardActivity.class);
+//        startActivity(intent);
+//        finish();
+//    }
 
     public boolean isCheckValid() {
         boolean err = false;
@@ -124,5 +120,11 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FirebaseAuth.getInstance().signOut();
     }
 }

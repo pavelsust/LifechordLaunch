@@ -321,7 +321,7 @@ public class DashboardActivity extends AppCompatActivity {
     private String setDateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = sdf.format(new Date());
-        return currentDate + " 04:35 PM";
+        return currentDate + " 06:35 PM";
     }
 
     public void showDialog() {
