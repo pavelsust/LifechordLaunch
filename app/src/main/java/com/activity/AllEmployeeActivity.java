@@ -81,7 +81,6 @@ public class AllEmployeeActivity extends AppCompatActivity {
                             Post post = dataSnapshot1.getValue(Post.class);
                             if (post.getLaunchDate().equals("" + getCurrentDate())) {
                                 if (post.getIsAlreadySelect().equals("1")) {
-                                    //postList.add(new Post("" + post.getName(), "" + post.getDesignation(), "" + post.getLaunchDate(), "" + post.getIsAlreadySelect(), "" + post.getUserID()));
                                     postList.add(post);
 
                                 }

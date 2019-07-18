@@ -1,9 +1,16 @@
 package com.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
@@ -17,8 +24,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.aponjon.lifechordlaunch.R;
+import com.com.utils.CheckPermission;
 import com.com.utils.Constant;
 import com.com.utils.LoginState;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,10 +48,14 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 import timber.log.Timber;
 
-public class DashboardActivity extends AppCompatActivity {
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
+public class DashboardActivity extends AppCompatActivity implements LocationListener {
+
+    private static final String TAG = DashboardActivity.class.getSimpleName();
     private DatabaseReference databaseReference;
     private LoginState loginState;
 
@@ -71,6 +84,21 @@ public class DashboardActivity extends AppCompatActivity {
 
     @BindView(R.id.text_user_designation)
     TextView userDesignation;
+    public CheckPermission checkPermission;
+    public static final int PERMISSION_REQUEST_CODE = 200;
+    public static String gpsTimeDate;
+
+
+    LocationManager locationManager;
+    Location loc;
+
+    boolean isGPS = false;
+    boolean isNetwork = false;
+    boolean canGetLocation = true;
+
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +112,13 @@ public class DashboardActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
 
+
+        locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
+        isGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        checkPermission = new CheckPermission(getApplicationContext());
+
         atg = AnimationUtils.loadAnimation(this, R.anim.atg);
         atgtwo = AnimationUtils.loadAnimation(this, R.anim.atgtwo);
         atgthree = AnimationUtils.loadAnimation(this, R.anim.atgthree);
@@ -94,6 +129,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         if (loginState.getDataFromSharedPreferance(Constant.DESIGNATION) != null && !loginState.getDataFromSharedPreferance(Constant.DESIGNATION).isEmpty()) {
             userDesignation.setText("" + loginState.getDataFromSharedPreferance(Constant.DESIGNATION));
+        }
+
+        if (checkPermission.isPermissionGranted()) {
+            getLocation();
+        } else {
+            requestForPermission();
         }
 
         databaseQuary();
@@ -117,7 +158,6 @@ public class DashboardActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_launch_order)
     public void orderButtonClick() {
-
         try {
             if (compareDate()) {
                 if (!isLaunchOrder) {
@@ -307,9 +347,10 @@ public class DashboardActivity extends AppCompatActivity {
 
     public boolean compareDate() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
-
-        Date currentDateTime = sdf.parse(getCurrentDateAndTime());
+        Date currentDateTime = sdf.parse(gpsTimeDate);
         Date setDateTime = sdf.parse(setDateTime());
+
+        Timber.d("gps time: " + gpsTimeDate);
 
         if (currentDateTime.before(setDateTime)) {
             return true;
@@ -321,7 +362,7 @@ public class DashboardActivity extends AppCompatActivity {
     private String setDateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = sdf.format(new Date());
-        return currentDate + " 06:35 PM";
+        return currentDate + " 03:35 PM";
     }
 
     public void showDialog() {
@@ -337,5 +378,130 @@ public class DashboardActivity extends AppCompatActivity {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void requestForPermission() {
+        ActivityCompat.requestPermissions(DashboardActivity.this, new String[]{Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
+                        showMessageOKCancel("You need to allow access to both the permissions",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS,
+                                                            Manifest.permission.READ_PHONE_STATE,
+                                                            Manifest.permission.READ_CALL_LOG,
+                                                            Manifest.permission.MODIFY_PHONE_STATE,
+                                                            Manifest.permission.CALL_PHONE},
+                                                    PERMISSION_REQUEST_CODE);
+                                        }
+                                    }
+                                });
+                        return;
+                    }
+                }
+        }
+
+        if (checkPermission.isPermissionGranted()) {
+            getLocation();
+        } else {
+            Toasty.error(getApplicationContext(), "Need location permission", Toast.LENGTH_SHORT, false).show();
+        }
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new android.app.AlertDialog.Builder(getApplicationContext())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+
+    private void getLocation() {
+        progressDialog.show();
+        try {
+            if (canGetLocation) {
+                Log.d(TAG, "Can get location");
+                if (isGPS) {
+                    // from GPS
+                    Log.d(TAG, "GPS on");
+                    locationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER,
+                            DashboardActivity.MIN_TIME_BW_UPDATES,
+                            DashboardActivity.MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+                    if (locationManager != null) {
+                        loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (loc != null)
+                            progressDialog.dismiss();
+                        upDateTime(loc);
+                    }
+                } else if (isNetwork) {
+                    // from Network Provider
+                    Log.d(TAG, "NETWORK_PROVIDER on");
+                    locationManager.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+                    if (locationManager != null) {
+                        loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        if (loc != null)
+                            progressDialog.dismiss();
+                        upDateTime(loc);
+                    }
+                } else {
+                    loc.setLatitude(0);
+                    loc.setLongitude(0);
+                    progressDialog.dismiss();
+                    upDateTime(loc);
+                }
+            } else {
+                Log.d(TAG, "Can't get location");
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        //updateUI(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        getLocation();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        if (locationManager != null) {
+            locationManager.removeUpdates(this);
+        }
+    }
+
+    public void upDateTime(Location location) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+        String currentDate = sdf.format(location.getTime());
+        Timber.d("time " + currentDate);
+        gpsTimeDate = currentDate;
     }
 }
