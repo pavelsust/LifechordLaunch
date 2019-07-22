@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.adapter.AllEmployeeAdapter;
 import com.aponjon.lifechordlaunch.R;
 import com.com.utils.Constant;
+import com.com.utils.LoginState;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,9 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pojo.Post;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,6 +34,7 @@ public class AllEmployeeActivity extends AppCompatActivity {
     public AllEmployeeAdapter allEmployeeAdapter;
     private DatabaseReference databaseReference;
     public ProgressDialog progressDialog;
+    public LoginState loginState;
 
 
     @Override
@@ -55,6 +55,7 @@ public class AllEmployeeActivity extends AppCompatActivity {
         });
 
 
+        loginState = new LoginState(getApplicationContext());
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         progressDialog = new ProgressDialog(AllEmployeeActivity.this);
@@ -79,7 +80,7 @@ public class AllEmployeeActivity extends AppCompatActivity {
 
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             Post post = dataSnapshot1.getValue(Post.class);
-                            if (post.getLaunchDate().equals("" + getCurrentDate())) {
+                            if (post.getLaunchDate().equals("" + loginState.getCurrentDate())) {
                                 if (post.getIsAlreadySelect().equals("1")) {
                                     postList.add(post);
 
@@ -99,11 +100,6 @@ public class AllEmployeeActivity extends AppCompatActivity {
                 });
     }
 
-    private String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDate = sdf.format(new Date());
-        return currentDate;
-    }
 
     public void dataSetIntoAdapter(List<Post> postList) {
         allEmployeeAdapter = new AllEmployeeAdapter(getApplicationContext(), postList);
