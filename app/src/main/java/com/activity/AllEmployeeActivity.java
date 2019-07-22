@@ -59,7 +59,6 @@ public class AllEmployeeActivity extends AppCompatActivity {
             }
         });
 
-
         loginState = new LoginState(getApplicationContext());
         databaseReference = FirebaseDatabase.getInstance().getReference();
 

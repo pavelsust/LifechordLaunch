@@ -8,8 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import timber.log.Timber;
-
 public class LoginState {
     public Context context;
     public SharedPreferences sharedPreferences;
@@ -53,7 +51,7 @@ public class LoginState {
 
         SimpleDateFormat zoDateFormat = new SimpleDateFormat("zzz");
         String currentZone = zoDateFormat.format(new Date());
-        return currentDate + "5:10 PM " + "GMT+6:00";
+        return currentDate + "10:45 AM " + "GMT+6:00";
     }
 
     public String getCurrentDate() {
