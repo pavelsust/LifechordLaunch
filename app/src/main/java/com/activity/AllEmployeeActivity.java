@@ -21,11 +21,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pojo.Post;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class AllEmployeeActivity extends AppCompatActivity {
 
@@ -80,15 +85,20 @@ public class AllEmployeeActivity extends AppCompatActivity {
 
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             Post post = dataSnapshot1.getValue(Post.class);
-                            if (post.getLaunchDate().equals("" + loginState.getCurrentDate())) {
+
+                            if (post.getLaunchDate().equals("" + convertToOnlyDate(loginState.getCurrentDate()))) {
                                 if (post.getIsAlreadySelect().equals("1")) {
                                     postList.add(post);
 
                                 }
                             }
+
                         }
 
+                        Timber.d("data: " + dataSnapshot.toString());
+
                         progressDialog.dismiss();
+                        Timber.d("data: " + postList.toString());
                         dataSetIntoAdapter(postList);
 
                     }
@@ -104,6 +114,31 @@ public class AllEmployeeActivity extends AppCompatActivity {
     public void dataSetIntoAdapter(List<Post> postList) {
         allEmployeeAdapter = new AllEmployeeAdapter(getApplicationContext(), postList);
         recyclerView.setAdapter(allEmployeeAdapter);
+    }
+
+    public String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd hh:mm a zzz");
+        Date date = new Date();
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+6:00"));
+        return sdf.format(date);
+    }
+
+    public String convertToOnlyDate(String currentDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date;
+        String dateString = "";
+        try {
+            date = dateFormat.parse(currentDate);
+            System.out.println(date.toString()); // Wed Dec 04 00:00:00 CST 2013
+
+            dateString = dateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Timber.d("main date " + loginState.getCurrentDate());
+        Timber.d("Convert date: " + dateString);
+        return dateString;
     }
 
 }

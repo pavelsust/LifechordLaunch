@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/mm"
                     android:gravity="center_horizontal"
-                    android:text="Employee list"
+                    android:text="Employee List"
                     android:textColor="#172646"
                     android:textSize="16sp" />
 
@@ -166,7 +166,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/mm"
-                    android:text="Log out"
+                    android:text="Log Out"
                     android:textColor="#172646"
                     android:textSize="16sp" />
 
@@ -198,7 +198,8 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="@font/mm"
-
+        android:gravity="center_horizontal"
+        android:text="@string/app_name"
         android:textColor="#172646"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -225,17 +226,17 @@
 
     <Button
         android:id="@+id/button_launch_order"
-        android:layout_width="194dp"
+        android:layout_width="@dimen/_210sdp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/bgbtnguide"
         android:fontFamily="@font/mm"
-        android:text="Launch Order"
         android:textAllCaps="false"
+        android:text="Book My Launch"
         android:textColor="#FFF"
-        android:textSize="20sp"
+        android:textSize="@dimen/_16sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pagesubtitle" />

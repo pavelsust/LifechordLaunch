@@ -8,11 +8,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import timber.log.Timber;
+
 public class LoginState {
     public Context context;
     public SharedPreferences sharedPreferences;
 
-    public static String DATE_FORMAT = "yyyy MMM dd hh:mm a zzz";
+    public static String DATE_FORMAT = "yyyy-MM-dd hh:mm a zzz";
 
     public LoginState(Context context) {
         this.context = context;
@@ -46,12 +48,12 @@ public class LoginState {
 
 
     public String finalDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
         String currentDate = sdf.format(new Date());
 
         SimpleDateFormat zoDateFormat = new SimpleDateFormat("zzz");
         String currentZone = zoDateFormat.format(new Date());
-        return currentDate + "3:00 PM " + "GMT+6:00";
+        return currentDate + "5:10 PM " + "GMT+6:00";
     }
 
     public String getCurrentDate() {

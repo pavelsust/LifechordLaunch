@@ -35,6 +35,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pojo.Post;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -158,7 +162,12 @@ public class DashboardActivity extends AppCompatActivity {
         progressDialog.show();
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         //String key = databaseReference.push().getKey();
-        Post post = new Post("" + loginState.getDataFromSharedPreferance(Constant.NAME), "" + loginState.getDataFromSharedPreferance(Constant.DESIGNATION), "" + loginState.getCurrentDate(), "1", userID);
+
+        String date = convertToOnlyDate(loginState.getCurrentDate());
+
+        Timber.d("convert date main: " + date);
+
+        Post post = new Post("" + loginState.getDataFromSharedPreferance(Constant.NAME), "" + loginState.getDataFromSharedPreferance(Constant.DESIGNATION), "" +date , "1", userID);
         databaseReference
                 .child(Constant.DATA)
                 .child(userID)
@@ -193,7 +202,7 @@ public class DashboardActivity extends AppCompatActivity {
         progressDialog.show();
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String key = databaseReference.push().getKey();
-        Post post = new Post("" + loginState.getCurrentDate(), order);
+        Post post = new Post("" + convertToAm(loginState.getCurrentDate()), order);
 
         databaseReference
                 .child(Constant.ORDER)
@@ -296,17 +305,15 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
-
     public void updateUI() {
         if (isLaunchOrder) {
-            foodOrderTitle.setText("Your order complete");
-            launchOrder.setText("Cancel Order");
+            foodOrderTitle.setText("Enjoy your launch");
+            launchOrder.setText("Cancel My Launch");
         } else {
-            foodOrderTitle.setText("Order is not placed yet");
-            launchOrder.setText("Launch Order");
+            foodOrderTitle.setText("You hacen't booked your today's launch");
+            launchOrder.setText("Book My Launch");
         }
     }
-
 
     public void showDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -321,5 +328,41 @@ public class DashboardActivity extends AppCompatActivity {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+
+    public String convertToOnlyDate(String currentDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date;
+        String dateString = "";
+        try {
+            date = dateFormat.parse(currentDate);
+            System.out.println(date.toString()); // Wed Dec 04 00:00:00 CST 2013
+
+            dateString = dateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Timber.d("main date " + loginState.getCurrentDate());
+        Timber.d("Convert date: " + dateString);
+        return dateString;
+    }
+
+
+    public String convertToAm(String currentDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+        Date date;
+        String dateString = null;
+        try {
+            date = dateFormat.parse(currentDate);
+            System.out.println(date.toString()); // Wed Dec 04 00:00:00 CST 2013
+
+            dateString = dateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return dateString;
     }
 }
