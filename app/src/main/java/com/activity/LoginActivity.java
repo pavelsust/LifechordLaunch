@@ -60,11 +60,11 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle("Log In");
         auth = FirebaseAuth.getInstance();
         loginState = new LoginState(getApplicationContext());
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setMessage("Loading ...");
-
 
         databaseReference = FirebaseDatabase.getInstance().getReference(Constant.USER);
 
@@ -96,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                                             inputPassword.setError(getString(R.string.minimum_password));
                                         } else {
                                             Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                            progressDialog.dismiss();
                                         }
                                     } else {
                                         progressDialog.dismiss();
@@ -126,9 +127,11 @@ public class LoginActivity extends AppCompatActivity {
 
                         Timber.d("name" + myUser.getName());
                         Timber.d("designation: " + myUser.getName());
+
                         loginState.saveDataIntoSharePreferance(Constant.IS_LOGIN, true);
                         loginState.saveDataIntoSharePreferance(Constant.NAME, "" + myUser.getName());
                         loginState.saveDataIntoSharePreferance(Constant.DESIGNATION, "" + myUser.getDesignation());
+
                         progressDialog.dismiss();
 
                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);

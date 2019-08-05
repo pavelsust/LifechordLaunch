@@ -22,7 +22,7 @@
             android:layout_height="@dimen/_120sdp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
-            android:src="@drawable/ic_food" />
+            android:src="@drawable/ic_icon_login" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -80,7 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:background="@null"
-            android:visibility="gone"
             android:text="@string/btn_link_to_register"
             android:textAllCaps="false"
             android:textSize="15dp" />

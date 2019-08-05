@@ -39,6 +39,9 @@ public class AllEmployeeActivity extends AppCompatActivity {
     public AllEmployeeAdapter allEmployeeAdapter;
     private DatabaseReference databaseReference;
     public ProgressDialog progressDialog;
+
+
+
     public LoginState loginState;
 
 

@@ -93,7 +93,6 @@ public class DashboardActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
 
-
         locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
         isGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -185,7 +184,6 @@ public class DashboardActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
                             isLaunchOrder = true;
-                            Toast.makeText(DashboardActivity.this, "Success", Toast.LENGTH_LONG).show();
                             updateUI();
                         } else {
                             isLaunchOrder = false;
@@ -310,7 +308,7 @@ public class DashboardActivity extends AppCompatActivity {
             foodOrderTitle.setText("Enjoy your launch");
             launchOrder.setText("Cancel My Launch");
         } else {
-            foodOrderTitle.setText("You hacen't booked your today's launch");
+            foodOrderTitle.setText("You haven't booked your today's launch");
             launchOrder.setText("Book My Launch");
         }
     }

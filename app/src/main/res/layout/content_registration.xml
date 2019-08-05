@@ -21,7 +21,7 @@
             android:layout_height="@dimen/logo_w_h"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/ic_food" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorAccent"
+            android:background="@color/colorPrimary"
             android:text="@string/action_sign_in_short"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
@@ -110,6 +110,7 @@
             android:id="@+id/btn_reset_password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="20dip"
             android:background="@null"
             android:text="@string/btn_forgot_password"
@@ -124,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:background="@null"
+            android:visibility="gone"
             android:text="@string/btn_link_to_login"
             android:textAllCaps="false"
             android:textColor="@color/white"

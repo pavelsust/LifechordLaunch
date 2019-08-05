@@ -1,5 +1,6 @@
 package com.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -57,6 +58,17 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle("Registration");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         ButterKnife.bind(this);
         mAuth = FirebaseAuth.getInstance();
         loginState = new LoginState(getApplicationContext());
@@ -85,6 +97,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         progressBar.setVisibility(View.GONE);
                                         if (task.isSuccessful()) {
+                                            openDashboard(inputName.getText().toString(), inputDesignation.getText().toString());
                                         } else {
                                             //display a failure message
                                         }
@@ -100,12 +113,14 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
 
-//    private void openDashboard() {
+    private void openDashboard(String name, String designation) {
 //        loginState.saveDataIntoSharePreferance(Constant.IS_LOGIN, true);
-//        Intent intent = new Intent(RegistrationActivity.this, DashboardActivity.class);
-//        startActivity(intent);
-//        finish();
-//    }
+//        loginState.saveDataIntoSharePreferance(Constant.NAME, "" + name);
+//        loginState.saveDataIntoSharePreferance(Constant.DESIGNATION, "" + designation);
+        Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     public boolean isCheckValid() {
         boolean err = false;
