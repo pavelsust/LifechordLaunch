@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
-                android:inputType="textEmailAddress"
+                android:inputType="textWebEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
                 />
