@@ -51,7 +51,7 @@ public class LoginState {
 
         SimpleDateFormat zoDateFormat = new SimpleDateFormat("zzz");
         String currentZone = zoDateFormat.format(new Date());
-        return currentDate + "1:45 PM " + "GMT+6:00";
+        return currentDate + "10:45 AM " + "GMT+6:00";
     }
 
     public String getCurrentDate() {

@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -132,12 +131,6 @@ public class DashboardActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_launch_order)
     public void orderButtonClick() {
-
-        Timber.d("Current date: " + loginState.getCurrentDate());
-        Timber.d("Fixed date: " + loginState.finalDate());
-        Timber.d("Result date: " + loginState.compareTwoDate());
-
-
         if (loginState.compareTwoDate()) {
             if (!isLaunchOrder) {
                 postNewData();
@@ -253,7 +246,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     public void databaseQuary() {
         progressDialog.show();
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Timber.d("local user: " + userID);
+
         databaseReference
                 .child(Constant.DATA)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -262,9 +257,18 @@ public class DashboardActivity extends AppCompatActivity {
 
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             Post post = dataSnapshot1.getValue(Post.class);
+                            Timber.d("firebase user: " + post.getUserID());
 
                             if (post.getUserID().equals("" + userID)) {
-                                if (post.getLaunchDate().equals("" + loginState.getCurrentDate())) {
+
+                                Timber.d("user matched");
+                                Timber.d("current date: " + loginState.getCurrentDate());
+
+                                if (post.getLaunchDate().equals("" + convertToOnlyDate(loginState.getCurrentDate()))) {
+
+                                    Timber.d("date matched");
+                                    Timber.d("select " + post.getIsAlreadySelect());
+
                                     if (post.getIsAlreadySelect().equals("1")) {
                                         isLaunchOrder = true;
                                     } else {
@@ -304,6 +308,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void updateUI() {
+        Timber.d("test launch" + isLaunchOrder);
         if (isLaunchOrder) {
             foodOrderTitle.setText("Enjoy your launch");
             launchOrder.setText("Cancel My Launch");

@@ -2,6 +2,7 @@ package com.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -39,10 +40,8 @@ public class AllEmployeeActivity extends AppCompatActivity {
     public AllEmployeeAdapter allEmployeeAdapter;
     private DatabaseReference databaseReference;
     public ProgressDialog progressDialog;
-
-
-
     public LoginState loginState;
+    public Menu menu;
 
 
     @Override
@@ -115,6 +114,7 @@ public class AllEmployeeActivity extends AppCompatActivity {
 
     public void dataSetIntoAdapter(List<Post> postList) {
         allEmployeeAdapter = new AllEmployeeAdapter(getApplicationContext(), postList);
+        updateTotalOrder("" + postList.size());
         recyclerView.setAdapter(allEmployeeAdapter);
     }
 
@@ -141,6 +141,18 @@ public class AllEmployeeActivity extends AppCompatActivity {
         Timber.d("main date " + loginState.getCurrentDate());
         Timber.d("Convert date: " + dateString);
         return dateString;
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_employee, menu);
+        this.menu = menu;
+        return true;
+    }
+
+    private void updateTotalOrder(String number) {
+        menu.findItem(R.id.menu_total_order).setTitle("Total order: " + number);
     }
 
 }
