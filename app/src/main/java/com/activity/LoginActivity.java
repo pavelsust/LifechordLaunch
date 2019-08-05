@@ -2,6 +2,7 @@ package com.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
@@ -65,13 +67,17 @@ public class LoginActivity extends AppCompatActivity {
         loginState = new LoginState(getApplicationContext());
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setMessage("Loading ...");
-
         databaseReference = FirebaseDatabase.getInstance().getReference(Constant.USER);
 
-        if (loginState.getBooleanDataFromSharedPreferance(Constant.IS_LOGIN)) {
-            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-            startActivity(intent);
-            finish();
+
+        if (isNetworkAvailable(getApplicationContext())) {
+            if (loginState.getBooleanDataFromSharedPreferance(Constant.IS_LOGIN)) {
+                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else {
+            showDialog();
         }
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +114,24 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void showDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Alert!!");
+        alertDialogBuilder.setMessage("You have no internet connection.");
+        alertDialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        finish();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
+
 
     @OnClick(R.id.btn_signup)
     public void openRegistrationActivity() {

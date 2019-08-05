@@ -79,7 +79,6 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
             <TextView
-                android:id="@+id/mainmenus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -116,7 +115,6 @@
                         android:src="@drawable/icnet" />
 
                     <TextView
-                        android:id="@+id/network"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/mm"
@@ -142,7 +140,6 @@
                         android:src="@drawable/icplug" />
 
                     <TextView
-                        android:id="@+id/plugins"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/mm"
