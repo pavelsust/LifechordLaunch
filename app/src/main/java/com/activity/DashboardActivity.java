@@ -321,7 +321,7 @@ public class DashboardActivity extends AppCompatActivity {
     public void showDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Notice");
-        alertDialogBuilder.setMessage("Your can't change order after 10:45 AM");
+        alertDialogBuilder.setMessage("Your can't change order after 10:30 AM");
         alertDialogBuilder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     @Override

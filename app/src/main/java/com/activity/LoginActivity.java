@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.com.utils.Constant;
 import com.com.utils.LoginState;
 import com.com.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +37,7 @@ import com.pojo.MyUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {
@@ -131,8 +134,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-
     @OnClick(R.id.btn_signup)
     public void openRegistrationActivity() {
         Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
@@ -183,4 +184,65 @@ public class LoginActivity extends AppCompatActivity {
         return false;
     }
 
+    @OnClick(R.id.btn_reset_password)
+    public void showForgotPasswordDialog() {
+        // load the dialog_promt_user.xml layout and inflate to view
+        LayoutInflater layoutinflater = LayoutInflater.from(LoginActivity.this);
+        View promptUserView = layoutinflater.inflate(R.layout.dialog_prompt_user, null);
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this)
+                .setView(promptUserView)
+                .setTitle("Enter your email address")
+                .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        EditText userEmail = (EditText) alertDialog.findViewById(R.id.username);
+                        if (userEmail.getText().toString().length() > 0) {
+                            sendResetEmail(alertDialog, userEmail.getText().toString());
+                        } else {
+                            userEmail.setError("please fill this");
+                        }
+                    }
+                });
+            }
+        });
+        alertDialog.show();
+
+    }
+
+    public void sendResetEmail(AlertDialog alertDialog, String email) {
+        progressDialog.show();
+        auth.sendPasswordResetEmail(email)
+
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toasty.error(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT, false).show();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        progressDialog.dismiss();
+                        if (task.isSuccessful()) {
+                            alertDialog.dismiss();
+                            Toasty.success(getApplicationContext(), "Check your email", Toast.LENGTH_SHORT, false).show();
+                        }
+                    }
+                });
+
+
+    }
 }
