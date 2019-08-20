@@ -15,7 +15,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="@dimen/_200sdp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="0dp"
@@ -27,11 +27,11 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="@dimen/_60sdp"
-            android:layout_height="@dimen/_60sdp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:src="@drawable/ic_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -40,13 +40,13 @@
             android:id="@+id/text_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_17sdp"
             android:fontFamily="@font/mr"
             android:text="Angga Risky"
             android:textColor="#FFF"
-            android:textSize="20sp"
+            android:textSize="@dimen/_14sdp"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,23 +54,23 @@
             android:id="@+id/text_user_designation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginLeft="17dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_4sdp"
             android:fontFamily="@font/ml"
             android:text="USD Wallet"
             android:textColor="#FFF"
-            android:textSize="16sp"
+            android:textSize="@dimen/_11sdp"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toBottomOf="@+id/text_user_name" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="182dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="@dimen/_120sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_42sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
             android:background="@drawable/bgmenus"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -81,14 +81,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_marginLeft="@dimen/_14sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
                 android:fontFamily="@font/mr"
                 android:text="Main Menus"
                 android:textColor="#818181"
-                android:textSize="16sp" />
+                android:textSize="@dimen/_10sdp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -121,7 +121,7 @@
                         android:gravity="center_horizontal"
                         android:text="Employee List"
                         android:textColor="#172646"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/_10sdp" />
 
                 </LinearLayout>
 
@@ -145,7 +145,7 @@
                         android:fontFamily="@font/mm"
                         android:text="My Order "
                         android:textColor="#172646"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/_10sdp" />
 
                 </LinearLayout>
 
@@ -170,7 +170,7 @@
                         android:fontFamily="@font/mm"
                         android:text="Log Out"
                         android:textColor="#172646"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/_10sdp" />
 
                 </LinearLayout>
 
@@ -181,11 +181,11 @@
 
         <ImageView
             android:id="@+id/food_image"
-            android:layout_width="154dp"
-            android:layout_height="154dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="@dimen/_130sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_1sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:src="@drawable/ic_dashborad_food"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
@@ -196,13 +196,13 @@
             android:id="@+id/food_order_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginEnd="@dimen/_3sdp"
             android:fontFamily="@font/mm"
             android:gravity="center_horizontal"
             android:textColor="#172646"
-            android:textSize="22sp"
+            android:textSize="@dimen/_13sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -212,9 +212,9 @@
             android:id="@+id/pagesubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
             android:fontFamily="@font/ml"
             android:lineSpacingExtra="6dp"
             android:text="You can order your launch from\n 12 am to 10.44 am"
@@ -229,15 +229,15 @@
             android:id="@+id/button_launch_order"
             android:layout_width="@dimen/_210sdp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
             android:background="@drawable/bgbtnguide"
             android:fontFamily="@font/mm"
             android:text="Book My Launch"
             android:textAllCaps="false"
             android:textColor="#FFF"
-            android:textSize="@dimen/_16sdp"
+            android:textSize="@dimen/_14sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pagesubtitle" />
@@ -245,7 +245,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/mm"
             android:text="@string/powered"
             android:textColor="@color/colorPrimary"
