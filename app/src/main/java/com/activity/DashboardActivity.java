@@ -312,11 +312,11 @@ public class DashboardActivity extends AppCompatActivity {
     public void updateUI() {
         Timber.d("test launch" + isLaunchOrder);
         if (isLaunchOrder) {
-            foodOrderTitle.setText("Enjoy your launch");
-            launchOrder.setText("Cancel My Launch");
+            foodOrderTitle.setText("Enjoy your lunch");
+            launchOrder.setText("Cancel My Lunch");
         } else {
-            foodOrderTitle.setText("You haven't booked your today's launch");
-            launchOrder.setText("Book My Launch");
+            foodOrderTitle.setText("You haven't booked your today's lunch");
+            launchOrder.setText("Book My Lunch");
         }
     }
 
