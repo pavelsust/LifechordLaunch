@@ -87,6 +87,8 @@ public class DashboardActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
+
         loginState = new LoginState(getApplicationContext());
         progressDialog = new ProgressDialog(DashboardActivity.this);
         progressDialog.setCancelable(false);

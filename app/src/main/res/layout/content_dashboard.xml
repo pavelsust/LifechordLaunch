@@ -64,6 +64,36 @@
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toBottomOf="@+id/text_user_name" />
 
+        <Button
+            android:id="@+id/button_launch_order"
+            android:layout_width="@dimen/_210sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:background="@drawable/bgbtnguide"
+            android:fontFamily="@font/mm"
+            android:text="Book My Lunch"
+            android:textAllCaps="false"
+            android:textColor="#FFF"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pagesubtitle" />
+
+        <ImageView
+            android:id="@+id/food_image"
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="@dimen/_130sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_1sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:src="@drawable/ic_dashborad_food"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
@@ -86,7 +116,7 @@
                 android:layout_marginTop="@dimen/_12sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
                 android:fontFamily="@font/mr"
-                android:text="Main Menus"
+                android:text="Main"
                 android:textColor="#818181"
                 android:textSize="@dimen/_10sdp" />
 
@@ -179,19 +209,6 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/food_image"
-            android:layout_width="@dimen/_130sdp"
-            android:layout_height="@dimen/_130sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_1sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:src="@drawable/ic_dashborad_food"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
         <TextView
             android:id="@+id/food_order_title"
             android:layout_width="wrap_content"
@@ -217,30 +234,13 @@
             android:layout_marginEnd="@dimen/_4sdp"
             android:fontFamily="@font/ml"
             android:lineSpacingExtra="6dp"
-            android:text="You can order your launch from\n 12 am to 10.44 am"
+            android:text="You can order your lunch from\n 12 am to 10.30 AM"
             android:textAlignment="center"
             android:textColor="#A1A1A1"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/food_order_title" />
-
-        <Button
-            android:id="@+id/button_launch_order"
-            android:layout_width="@dimen/_210sdp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_4sdp"
-            android:background="@drawable/bgbtnguide"
-            android:fontFamily="@font/mm"
-            android:text="Book My Launch"
-            android:textAllCaps="false"
-            android:textColor="#FFF"
-            android:textSize="@dimen/_14sdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pagesubtitle" />
 
         <TextView
             android:layout_width="wrap_content"
