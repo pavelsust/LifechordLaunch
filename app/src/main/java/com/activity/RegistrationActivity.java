@@ -114,10 +114,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     private void openDashboard(String name, String designation) {
-       loginState.saveDataIntoSharePreferance(Constant.IS_LOGIN, true);
+        loginState.saveDataIntoSharePreferance(Constant.IS_LOGIN, true);
         loginState.saveDataIntoSharePreferance(Constant.NAME, "" + name);
         loginState.saveDataIntoSharePreferance(Constant.DESIGNATION, "" + designation);
         Intent intent = new Intent(RegistrationActivity.this, DashboardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
